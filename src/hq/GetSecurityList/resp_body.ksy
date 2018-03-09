@@ -1,6 +1,6 @@
 meta:
-  - id: get_security_list_resp_body
-    endian: le
+  id: get_security_list_resp_body
+  endian: le
 seq:
   - id: num
     type: u2
@@ -26,6 +26,6 @@ types:
       - id: decimal_point
         type: u1
       - id: pre_close
-        type: float
+        type: f4
       - id: not_used_2_skip4
         type: s4
