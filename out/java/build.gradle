@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+group = 'cc.rainx.struct'
+version = '0.1.1-SNAPSHOT'
+
+repositories {
+    jcenter()
+}
+
+artifacts {  
+    archives jar  
+}
+
+jar {
+    baseName = 'tdx-struct'
+}
