@@ -1,9 +1,12 @@
 apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'maven'
 
-group = 'cc.rainx.struct'
+group = 'cc.rainx'
 version = '0.1.1-SNAPSHOT'
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 
@@ -11,6 +14,53 @@ artifacts {
     archives jar  
 }
 
-jar {
-    baseName = 'tdx-struct'
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            //为Pom文件做数字签名
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            //指定项目部署到的中央库地址，UserName和Password就是Part 1中注册的账号。
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            //构造项目的Pom文件，参见Part 2中Pom文件的规范，不要遗漏必填项
+            pom.project {
+                name project.name
+                packaging 'java'
+                description 'Tdx Struct'
+                url 'https://github.com/rainx/tdx_struct'
+
+                scm {
+                    url 'scm:git@github.com/rainx/tdx_struct.git'
+                    connection 'scm:git@github.com/rainx/tdx_struct.git'
+                    developerConnection 'git@github.com/rainx/tdx_struct.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'RainX'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'rainx1982'
+                        name 'RainX'
+                        email 'i@rainx.cc'
+                    }
+                }
+            }
+        }
+    }
 }
